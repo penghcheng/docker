@@ -1,0 +1,38 @@
+version: "3.6"
+services:
+  php72:
+    image: php
+    ports:
+        - "9090:9000"
+        - "8090:9090"
+    volumes:
+      -  /usr/docker/php/html:/var/www/html
+      - ./conf/php/php.ini:/usr/local/etc/php/php.ini
+    stdin_open: true
+    tty: true
+    privileged: true
+    networks:
+        php-network:
+          ipv4_address: 172.30.0.7
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3307:3306"
+    volumes:
+       - ./conf/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+       - ./mysql:/var/lib/mysql
+    stdin_open: true
+    tty: true
+    privileged: true
+    networks:
+       mysql-network:
+          ipv4_address: 172.50.0.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+networks:
+ php-network:
+    external:
+       name: redis_redis-slave
+ mysql-network:
+    external:
+       name: redis_redis-master

@@ -1,0 +1,64 @@
+version: "3.6"
+services:
+  nginx:
+        image: nginx
+        container_name: nginx
+        working_dir: /nginx-test
+        ports:
+          - "8001:80"
+        stdin_open: true
+        networks:
+          nginx-master:
+             ipv4_address: 172.50.0.5
+        tty: true
+        privileged: true
+        volumes:
+            - /usr/docker/nginx/nginx-load:/nginx-test
+            - /usr/docker/nginx/lua:/lua-packge
+        entrypoint:
+          - /bin/bash
+          - nginx.sh
+  nginx-lua1:
+        image: nginx
+        container_name: nginx-lua1
+        working_dir: /nginx-test
+        ports:
+          - "8002:80"
+        stdin_open: true
+        networks:
+            nginx-slave:
+             ipv4_address: 172.30.0.5
+        tty: true
+        privileged: true
+        volumes:
+          - /usr/docker/nginx/nginx-lua1:/nginx-test
+          - /usr/docker/nginx/lua:/lua-packge
+        entrypoint:
+          - /bin/bash
+          - nginx.sh
+
+  nginx-lua2:
+          image: nginx
+          container_name: nginx-lua2
+          working_dir: /nginx-test
+          ports:
+            - "8003:80"
+          stdin_open: true
+          networks:
+             nginx-slave:
+               ipv4_address: 172.30.0.6
+          tty: true
+          privileged: true
+          volumes:
+              - /usr/docker/nginx/nginx-lua2:/nginx-test
+              - /usr/docker/nginx/lua:/lua-packge
+          entrypoint:
+            - /bin/bash
+            - nginx.sh
+networks:
+  nginx-master:
+      external:
+         name: redis_redis-master
+  nginx-slave:
+      external:
+          name: redis_redis-slave

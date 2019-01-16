@@ -1,0 +1,24 @@
+2019/01/16 08:19:03 [error] 6#0: *1 lua entry thread aborted: runtime error: /nginx-test/lua-project/template.lua:1: module 'resty.template' not found:
+	no field package.preload['resty.template']
+	no file '/lua-packge/lua-resty-http-0.12/lib/resty/template.lua'
+	no file './resty/template.lua'
+	no file '/usr/share/lua/5.1/resty/template.lua'
+	no file '/usr/share/lua/5.1/resty/template/init.lua'
+	no file '/usr/lib64/lua/5.1/resty/template.lua'
+	no file '/usr/lib64/lua/5.1/resty/template/init.lua'
+	no file '/lua-packge/lua-resty-template-1.9/lib/resty/template.lua'
+	no file './resty/template.lua'
+	no file '/usr/share/lua/5.1/resty/template.lua'
+	no file '/usr/share/lua/5.1/resty/template/init.lua'
+	no file '/usr/lib64/lua/5.1/resty/template.lua'
+	no file '/usr/lib64/lua/5.1/resty/template/init.lua'
+	no file './resty/template.so'
+	no file '/usr/lib64/lua/5.1/resty/template.so'
+	no file '/usr/lib64/lua/5.1/loadall.so'
+	no file './resty.so'
+	no file '/usr/lib64/lua/5.1/resty.so'
+	no file '/usr/lib64/lua/5.1/loadall.so'
+stack traceback:
+coroutine 0:
+	[C]: in function 'require'
+	/nginx-test/lua-project/template.lua:1: in function </nginx-test/lua-project/template.lua:1>, client: 47.106.243.13, server: nginx.rbtedu.com, request: "GET / HTTP/1.1", host: "47.106.243.13:8002"

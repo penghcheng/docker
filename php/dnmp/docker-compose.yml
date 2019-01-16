@@ -1,0 +1,49 @@
+version: "3.6"
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      -  /home/web:/var/www/html:rw
+      - ./conf/nginx:/etc/nginx/conf.d:rw
+      - ./log/nginx:/var/log/nginx:rw
+    stdin_open: true
+    tty: true
+    privileged: true
+    networks:
+      - net-php72
+  php72:
+    image: php:7.2-fpm
+    expose:
+      - "9000"
+    volumes:
+      -  /home/web:/var/www/html:rw
+      - ./conf/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./conf/php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:rw
+      - ./log/php:/var/log/dnmp:rw
+    stdin_open: true
+    tty: true
+    privileged: true
+    networks:
+      - net-php72
+      - net-mysql
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./conf/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+      - ./mysql:/var/lib/mysql:rw
+    stdin_open: true
+    tty: true
+    privileged: true
+    networks:
+      - net-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+
+networks:
+  net-php72:
+  net-mysql:
