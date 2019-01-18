@@ -23,9 +23,46 @@ local config = {
 local redis_cluster = require "rediscluster"
 local red_c = redis_cluster:new(config)
 
-local v, err = red_c:get("peter")
-if err then
-    ngx.log(ngx.ERR, "err: ", err)
-else
-    ngx.say(v)
+-- redis 函数
+local function read_redis(key)
+      local resp,err = red_c:get(key)
+
+      if err then
+          ngx.log(ngx.ERR, "err: ", err)
+          return
+      end
+
+      if resp==ngx.null then
+         resp=nil
+      end
+      return resp
 end
+
+-- 请求http
+function read_http(url)
+    local http = require("resty.http")
+    local httpc = http.new()
+    local resp, err = httpc:request_uri(url,{
+       method = "GET"
+    })
+    if not resp then
+      ngx.log(ngx.ERR,"request error: ", err)  --????
+      return
+    end
+    httpc:close()
+    return resp.body
+end
+
+-- 结合分发层（如果用户请求一个商品的id缓存不存在，发送请求到php服务）
+
+local content=read_redis("name")
+
+if not content then
+    ngx.log(ngx.INFO,"发送http请求")
+    --ngx.say(read_http('http://47.106.243.13:9501/'))
+
+    --重写地址，继续匹配php-fpm
+    return ngx.exec('/php', 'a=3&b=5&c=6');
+end
+
+ngx.say(content)
