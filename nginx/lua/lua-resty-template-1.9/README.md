@@ -13,7 +13,7 @@ local view = template.new "view.html"
 view.message = "Hello, World!"
 view:render()
 -- Using template.render
-template.render("view.html", { message = "Hello, World!" })
+template.render("view.html", { message = "Hello, World!" })G
 ```
 
 ##### view.html
@@ -54,7 +54,6 @@ template.render([[
 * [Template Syntax](#template-syntax)
   * [Reserved Context Keys and Remarks](#reserved-context-keys-and-remarks)
 * [Installation](#installation)
-  * [Using OpenResty Package Manager (opm)](#using-openresty-package-manager-opm)
   * [Using LuaRocks or Moonrocks](#using-luarocks-or-moonrocks)
 * [Nginx / OpenResty Configuration](#nginx--openresty-configuration)
 * [Lua API](#lua-api)
@@ -82,7 +81,6 @@ template.render([[
 * [Alternatives](#alternatives)
 * [Benchmarks](#benchmarks)
 * [Changes](#changes)
-* [See Also](#see-also)
 * [License](#license)
 
 ## Template Syntax
@@ -245,21 +243,24 @@ You can  load templates from "sub-directories" as well with `{(syntax)}`:
 
 ## Installation
 
-Just place [`template.lua`](https://github.com/bungle/lua-resty-template/blob/master/lib/resty/template.lua) and [`template`](https://github.com/bungle/lua-resty-template/tree/master/lib/resty/template) directory somewhere in your `package.path`, under `resty` directory. If you are using OpenResty, the default location would be `/usr/local/openresty/lualib/resty`.
+Just place [`template.lua`](https://github.com/bungle/lua-resty-template/blob/master/lib/resty/template.lua) somewhere in your `package.path`, preferably under `resty` directory. If you are using OpenResty, the default location would be `/usr/local/openresty/lualib/resty`.
 
-### Using OpenResty Package Manager (opm)
+### Using LuaRocks or MoonRocks
 
-```Shell
-$ opm get bungle/lua-resty-template
-```
-
-### Using LuaRocks
+If you are using LuaRocks >= 2.2:
 
 ```Shell
 $ luarocks install lua-resty-template
 ```
 
-LuaRocks repository for `lua-resty-template` is located at https://luarocks.org/modules/bungle/lua-resty-template.
+If you are using LuaRocks < 2.2:
+
+```Shell
+$ luarocks install --server=http://rocks.moonscript.org moonrocks
+$ moonrocks install lua-resty-template
+```
+
+MoonRocks repository for `lua-resty-template`  is located here: https://rocks.moonscript.org/modules/bungle/lua-resty-template.
 
 ## Nginx / OpenResty Configuration
 
@@ -1071,7 +1072,7 @@ or (see the `{(head.html)}` is processed by lua-resty-template):
 </html>
 ```
 
-You may also use short escaping syntax:
+You may also use short escaping syntax (currently implemented in development version:
 
 ```html
 ...
@@ -1304,8 +1305,6 @@ https://github.com/bungle/lua-resty-template/blob/master/lib/resty/template/micr
 There is also a regression in LuaJIT that affects the results. If you want your LuaJIT patched against this,
 you need to merge this pull request: https://github.com/LuaJIT/LuaJIT/pull/174.
 
-Others have [reported](https://github.com/bungle/lua-resty-template/issues/21#issuecomment-226786051) that in simple benchmarks running this template engine actually beats Nginx serving static files by a factor of three. So I guess this engine is quite fast. 
-
 ##### Lua
 
 ```lua
@@ -1419,19 +1418,12 @@ I have not yet compared the results against the alternatives.
 
 The changes of every release of this module is recorded in [Changes.md](https://github.com/bungle/lua-resty-template/blob/master/Changes.md) file.
 
-## See Also
-
-* [lua-resty-route](https://github.com/bungle/lua-resty-route) — Routing library
-* [lua-resty-reqargs](https://github.com/bungle/lua-resty-reqargs) — Request arguments parser
-* [lua-resty-session](https://github.com/bungle/lua-resty-session) — Session library
-* [lua-resty-validation](https://github.com/bungle/lua-resty-validation) — Validation and filtering library
-
 ## License
 
 `lua-resty-template` uses three clause BSD license (because it was originally forked from one that uses it).
 
 ```
-Copyright (c) 2014 - 2017, Aapo Talvensaari
+Copyright (c) 2014 - 2016, Aapo Talvensaari
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

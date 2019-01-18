@@ -4,7 +4,7 @@ RUN groupadd -r nginx && useradd  -r -g nginx nginx
 
 #安装相关依赖
 RUN yum -y update
-RUN yum -y install  gcc gcc-c++ autoconf automake make zlib zlib-devel openssl* pcre* wget lua-devel
+RUN yum -y install gcc gcc-c++ autoconf automake make zlib zlib-devel openssl* pcre* wget
 
 RUN cd /data \
  && wget https://github.com/openresty/lua-nginx-module/archive/v0.10.13.tar.gz  \
@@ -25,18 +25,17 @@ RUN  cd /data \
  && wget http://luajit.org/download/LuaJIT-2.0.5.tar.gz \
  && tar -xzvf LuaJIT-2.0.5.tar.gz \
  && cd ./LuaJIT-2.0.5 \
- && make PREFIX=/usr/local/luajit \
- && make install PREFIX=/usr/local/luajit \
+ && make PREFIX=/usr/local/ \
+ && make install PREFIX=/usr/local/ \
  && cd .. \
- && export LUAJIT_LIB=/usr/local/lib \
+ && export LUAJIT_LIB=/usr/local/lib  \
  && export LUAJIT_INC=/usr/local/include/luajit-2.0
-
 RUN  cd /data \
  && wget http://nginx.org/download/nginx-1.14.1.tar.gz \
  && tar -zxvf nginx-1.14.1.tar.gz \
  && cd nginx-1.14.1 \
  && ./configure --prefix=/usr/local/nginx --user=nginx --group=nginx \
- 	--with-ld-opt="-Wl,-rpath,/usr/local/luajit/lib" \
+ 	--with-ld-opt="-Wl,-rpath,/usr/local/lib"  \
  	--with-http_stub_status_module \
  	--with-http_ssl_module \
  	--with-http_sub_module \
