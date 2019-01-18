@@ -3,6 +3,8 @@
 
 -- 链接redis集群
 
+-- ip地址定时获取
+
 local config = {
     name = "testCluster",                   --rediscluster name
     serv_list = {                           --redis cluster node list(host and port),
