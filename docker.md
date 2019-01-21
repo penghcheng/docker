@@ -1,3 +1,6 @@
+## Dockerfile 创建镜像
+##### docker build -t xxx .
+
 ## 创建docker consul
 ##### docker pull consul
 ##### docker run -itd -p 8501:8500 --name consul consul
