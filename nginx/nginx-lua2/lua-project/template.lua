@@ -1,5 +1,5 @@
---local template = require "resty.template"
---template.render("view.html", { message = "Hello, World!" })
+local template =require "resty.template"
+--template.render("index.html",{goods="123"})
 
 local share_data= ngx.shared.redis_cluster_addr --共享内存
 local tool=require ("tool")
@@ -44,12 +44,10 @@ local function read_redis(key)
 end
 
 local uri_args=ngx.req.get_uri_args()
-
-local content=read_redis("id_"..uri_args['id'])   --读取redis
-
+ --读取redis分类
+local content=read_redis("shop_category")
+local  goods={}
 if not content then
-    --return ngx.exec('/php', 'a=3&b=5&c=6');
-
     --应用层连接php_fpm
     local  req_data,res
     local  action=ngx.var.request.method
@@ -61,18 +59,20 @@ if not content then
     else
         req_data={ method=ngx.HTTP_GET}
     end
-
-     --内部子请求
+     --内部子请求,发送到laravel框架
      res = ngx.location.capture(
-        '/php'..ngx.var.request_uri,req_data
+        '/php/shop/public/index.php'..ngx.var.request_uri,req_data
      )
-     ngx.say('/php'..ngx.var.request_uri) -- 打印访问地址
-     if res.status == ngx.HTTP_OK then
-            ngx.say(res.body)
-     else
-            ngx.say('404')
-     end
+     -- ngx.say('/php/shop/public/index.php'..ngx.var.request_uri)
+
+     -- 判断状态码决定是否打印，如果返回不是200
+     -- if res.status == ngx.HTTP_OK then
+     --默认是从redis当中获取,redis当中不存在才访问php服务
+     goods['category']=cjsonObj.decode(res.body); -- 分类
+     template.render("index.html",{goods=goods})
      return
 end
 
 ngx.say(content)
+goods['shop']='peter的店铺'; -- 店铺
+goods['info']='商品详情';-- 详情
