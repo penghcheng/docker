@@ -64,7 +64,6 @@ if not content then
         '/php/shop/public/index.php'..ngx.var.request_uri,req_data
      )
      -- ngx.say('/php/shop/public/index.php'..ngx.var.request_uri)
-
      -- 判断状态码决定是否打印，如果返回不是200
      -- if res.status == ngx.HTTP_OK then
      --默认是从redis当中获取,redis当中不存在才访问php服务
