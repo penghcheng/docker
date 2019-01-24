@@ -1,0 +1,103 @@
+version: "3.6"
+services:
+  redis-master10:
+     image: redis4-cluster
+     container_name: redis-master10
+     working_dir: /config
+     environment:
+       - PORT=6381
+     ports:
+       - "6381:6381"
+       - "16381:16381"
+     stdin_open: true
+     tty: true
+     privileged: true
+     volumes: ["/usr/docker/redis4/config:/config"]
+     entrypoint:
+       - /bin/bash
+       - redis.sh
+  redis-master11:
+       image: redis4-cluster
+       container_name: redis-master11
+       working_dir: /config
+       environment:
+         - PORT=6382
+       ports:
+         - "6382:6382"
+         - "16382:16382"
+       stdin_open: true
+       tty: true
+       privileged: true
+       volumes: ["/usr/docker/redis4/config:/config"]
+       entrypoint:
+         - /bin/bash
+         - redis.sh
+  redis-master12:
+         image: redis4-cluster
+         container_name: redis-master12
+         working_dir: /config
+         environment:
+           - PORT=6383
+           - redis.sh
+         ports:
+           - "6383:6383"
+           - "16383:16383"
+         stdin_open: true
+         tty: true
+         privileged: true
+         volumes: ["/usr/docker/redis4/config:/config"]
+         entrypoint:
+           - /bin/bash
+           - redis.sh
+  redis-slave10:
+       image: redis4-cluster
+       container_name: redis-slave10
+       working_dir: /config
+       environment:
+            - PORT=6384
+       ports:
+         - "6384:6384"
+         - "16384:16384"
+       stdin_open: true
+       tty: true
+       privileged: true
+       volumes: ["/usr/docker/redis4/config:/config"]
+       entrypoint:
+         - /bin/bash
+         - redis.sh
+  redis-slave11:
+         image: redis4-cluster
+         container_name: redis-slave11
+         working_dir: /config
+         environment:
+              - PORT=6385
+         ports:
+           - "6385:6385"
+           - "16385:16385"
+         stdin_open: true
+         tty: true
+         privileged: true
+         volumes: ["/usr/docker/redis4/config:/config"]
+         entrypoint:
+           - /bin/bash
+           - redis.sh
+  redis-slave12:
+         image: redis4-cluster
+         container_name: redis-slave12
+         working_dir: /config
+         environment:
+              - PORT=6386
+         ports:
+           - "6386:6386"
+           - "16386:16386"
+         stdin_open: true
+         tty: true
+         privileged: true
+         volumes: ["/usr/docker/redis4/config:/config"]
+         entrypoint:
+           - /bin/bash
+           - redis.sh
+networks:
+  default:
+    driver: bridge
+
