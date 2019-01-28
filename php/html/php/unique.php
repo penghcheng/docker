@@ -39,7 +39,7 @@ class unique
 
     public function __construct()
     {
-        $this->redis = new  RedisCluster('', ['47.106.243.13:6391', '47.106.243.13:6392'], 0.5, 3, true);
+        $this->redis = new  RedisCluster('', ['47.106.243.13:6395', '47.106.243.13:6396'], 0.5, 3, true);
 
         /*foreach ($this->redis->_masters() as $v) {
             var_dump($v);      //172.10.0.0.5

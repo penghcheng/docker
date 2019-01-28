@@ -4,15 +4,18 @@
 
 require "unique.php";
 
+//在当前方法执行前，还有nginx应用层的拦截
+
 try {
     $setKey = '{product_1_20000}:set';  //集合key
-    $queueKey = '{product_1_20000}:1';  //队列key
+    $queueKey = '{product_1_20000}:88';  //队列key
     $infoKey = "shop_info_1";           //获取商品详情的key
     $unique = new unique();
     //判断当前的id是否有更新任务，没有再添加,还是要得到缓存数据，返回数据
     $set = $unique->redis->sIsMember($setKey, $queueKey);
     if ($set != false) {
         //等待任务的完成,读取缓存,等待一定的时间
+        RESULT:
         $i = 0;
         $info = '';
         while (true) {
@@ -28,9 +31,10 @@ try {
         }
         echo $info . PHP_EOL;
     } else {
-        $job = ['opera' => 'update', 'type' => 'info', 'id' => 1];
+        $job = ['opera' => 'update', 'type' => 'info', 'id' => 88];
         var_dump($unique->push($setKey, $queueKey, json_encode($job)));
         //从缓存当中获取数据
+        goto RESULT;
     }
 
 } catch (Exception $e) {
