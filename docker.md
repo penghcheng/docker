@@ -1,5 +1,6 @@
 ## Dockerfile 创建镜像
 ##### docker build -t xxx .
+##### docker run -itd -p 9501:9500 -v /www/swoft_2/swoft:/var/www/swoft --network swoftNetwork --ip 192.168.1.3 --name swoft-9500 swoft
 
 ## 创建docker consul
 ##### docker pull consul
