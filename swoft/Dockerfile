@@ -1,7 +1,18 @@
 FROM php:7.3
 # Version
 ENV PHPREDIS_VERSION 4.0.0
-ENV SWOOLE_VERSION 4.3.3
+ENV SWOOLE_VERSION 4.3.4
+#配置环境变量consul版本
+ENV CONSUL_VERSION=1.4.3
+ENV HASHICORP_RELEASES=https://releases.hashicorp.com
+
+# 更新阿里云的wheezy版本包源
+RUN echo "deb http://mirrors.aliyun.com/debian stretch main contrib non-free" > /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.aliyun.com/debian stretch main contrib non-free" >> /etc/apt/sources.list  && \
+    echo "deb http://mirrors.aliyun.com/debian stretch-updates main contrib non-free" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.aliyun.com/debian stretch-updates main contrib non-free" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list && \
+    echo "deb-src http://mirrors.aliyun.com/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
 
 # Timezone
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -15,6 +26,7 @@ RUN apt-get update \
         wget \
         git \
         zip \
+        unzip \
         libz-dev \
         libssl-dev \
         libnghttp2-dev \
@@ -37,6 +49,15 @@ RUN wget http://pecl.php.net/get/redis-${PHPREDIS_VERSION}.tgz -O /tmp/redis.tar
     && docker-php-ext-enable redis
  # 修改php.ini的文件 extension=redis.so
 
+#安装consul
+RUN     wget ${HASHICORP_RELEASES}/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip && \
+        unzip consul_${CONSUL_VERSION}_linux_amd64.zip && \
+        rm -rf consul_${CONSUL_VERSION}_linux_amd64.zip && \
+        mv consul /usr/local/bin
+
+
+
+
 # Swoole extension
 RUN wget https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz -O swoole.tar.gz \
     && mkdir -p swoole \
@@ -45,7 +66,7 @@ RUN wget https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz 
     && ( \
         cd swoole \
         && phpize \
-        && ./configure  --enable-openssl  --enable-http2 \
+        && ./configure  --enable-mysqlnd  --enable-openssl  --enable-http2 \
         && make -j$(nproc) \
         && make install \
     ) \
@@ -54,6 +75,8 @@ RUN wget https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz 
 
 #切换镜像
 RUN  composer config -g repo.packagist composer https://packagist.laravel-china.org
+
+VOLUME /consul/data
 
 #设置工作目录
 WORKDIR  /var/www/swoft
