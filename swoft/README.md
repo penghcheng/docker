@@ -21,4 +21,8 @@
     http://xx.xx.xx.xx:8501/ui/
     
 
- 
+### 创建consul的client转发服务地址到server
+
+                                        
+    consul agent -client -node=client0 -bind=172.18.106.124（内网地址） -data-dir=/consul/data    -join=192.168.1.10  -client 0.0.0.0
+    
